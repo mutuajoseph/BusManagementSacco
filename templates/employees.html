@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
+  <meta name="author" content="Creative Tim">
+  <title>Limuru Bus Sacco Management System</title>
+  <!-- Favicon -->
+  <link href="{{ url_for('static', filename='favicon.png')}}" rel="icon" type="image/png">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+  <!-- Icons -->
+  <link href="{{ url_for('static', filename='nucleo.css')}}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='all.min.css')}}" rel="stylesheet">
+  <!-- Argon CSS -->
+  <link type="text/css" href="{{ url_for('static', filename='argon.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+  <!--data tables-->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+</head>
+
+<body>
+  <!-- Sidenav -->
+  <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
+    <div class="container-fluid">
+      <!-- Toggler -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- Brand -->
+      <h4> Limuru Bus Sacco Management</h4>
+      <!-- Collapse -->
+      <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+        <!-- Collapse header -->
+        <div class="navbar-collapse-header d-md-none">
+        </div>
+        <!-- Navigation -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard">
+              <i class="fas fa-home"></i> Limuru Sacco Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/employees">
+              <i class="fas fa-users"></i> Employees
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/operators">
+              <i class="fas fa-user-alt"></i> Operators
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/vehicles">
+              <i class="fas fa-bus-alt"></i> Vehicles
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/meetings">
+              <i class="fas fa-handshake"></i> Meetings
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contributions">
+              <i class="fas fa-money-check-alt"></i> Contributions
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/manageUsers">
+              <i class="fas fa-money-check-alt"></i> Users
+            </a>
+          </li>
+        </ul>
+        <!-- Divider -->
+        
+      </div>
+    </div>
+  </nav>
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Top navbar -->
+    <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+      <div class="container-fluid">
+        <!-- Brand -->
+         <div class="navbar-wrapper">
+         <div class="collapse navbar-collapse justify-content-lg-end" id="navigation">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a>
+                <i class="fas fa-user"></i>
+                <p>{{session.username}} </p>
+              </a>
+            </li>
+          </ul>
+
+         </div>
+       </div>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navigation1"
+          <ul class="navbar-nav">
+            <a href="/logout" class="nav-link">
+              <i class="fas fa-sign-out-alt">Sign out</i>
+            </a>
+          </ul>
+
+      </div>
+
+      </div>
+    </nav>
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+      <div class="container-fluid">
+        <div class="header-body">
+          <!-- Card stats -->
+          <div class="card">
+            <div class="card-header">
+              <div class="form-group">
+                {% with messages = get_flashed_messages(with_categories = true) %}
+                  {% if messages %}
+                      {% for category, message in messages %}
+                          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                              <span>{{ message }}</span>
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                          </div>
+                      {% endfor %}
+                  {% endif %}
+                {% endwith %}
+              </div>
+            </div>
+            <div class="card-header" align="center">
+               <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                  Add Employee
+                </button>
+            </div>
+               <div class="table-responsive">
+                <table class="table" id="myTable">
+                  <thead class="text-warning">
+                      <th>ID</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Staff ID</th>
+                      <th>Role</th>
+                      <th>Delete</th>
+                  </thead>
+                   <tbody>
+                   {% for every in allEmployees %}
+                   <tr>
+                     <td>{{every.id}}</td>
+                     <td>{{every.firstName}}</td>
+                     <td>{{every.lastName}}</td>
+                     <td>{{every.staff_id}}</td>
+                     <td>{{every.role}}</td>
+                     <td>
+                       <form action="/employees/delete/{{ every.id }}" method="post">
+                          <button type="submit" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#"><small>Delete</small></button>
+                       </form>
+                     </td>
+                   </tr>
+                   {% endfor %}
+                    </tbody>
+                </table>
+          </div>
+          </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Register Employee</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="/employees" method="post">
+                      <div class="form-group">
+                        <label for="exampleEmail">Email</label>
+                        <input type="text" class="form-control" name="email" id="exampleEmail"  placeholder="Enter email" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="examplefirstname">First Name</label>
+                        <input type="text" class="form-control" name="firstName" id="examplefirstname" aria-describedby="emailHelp" placeholder="Enter first Name" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleLastName">Last Name</label>
+                        <input type="text" class="form-control" name="lastName" id="exampleLastName" placeholder="Enter Last Name" required>
+                      </div>
+                       <div class="form-group">
+                        <label for="exampleInputStaffId">Staff ID</label>
+                        <input type="text" class="form-control" name="staffId" id="exampleInputStaffId" placeholder="Enter Staff Id" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="role">Role</label>
+                        <select class="form-control" id = role name="role">
+                          <option value="driver">driver</option>
+                          <option value="conductor">conductor</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="VehicleId">Vehicle</label>
+                        <select class="form-control" id="VehicleId" name="vehicleId">
+                          {% for vehicle in vehicles %}
+                          <option value="{{ vehicle.id }}">{{vehicle.plateNo }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+  <!-- Core -->
+  <script src="{{url_for('static', filename='jquery.min.js')}}"></script>
+  <script src="{{url_for('static', filename='bootstrap.bundle.min.js')}}"></script>
+  <!-- Optional JS -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBd3PjUqq81lIOfBPYXrQGWwK5T4ystZjA"></script>
+  <!-- Argon JS -->
+  <script src="{{url_for('static', filename='argon.js?v=1.0.0')}}"></script>
+
+  <!--datatables-->
+  <script rel="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+  <script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    });
+  </script>
+
+</body>
+
+</html>

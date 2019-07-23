@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link type="text/css" href="{{ url_for('static', filename='') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+</head>
+<body>
+<header>
+  <nav class="main-nav text-white bg-dark">
+       <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+        <div class="container-fluid">
+        <!-- Brand -->
+         <div class="navbar-wrapper">
+         <div class="collapse navbar-collapse justify-content-lg-end" id="navigation">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a>
+                <i class="fas fa-user"></i>
+                <p>{{session["operator"]}} </p>
+              </a>
+            </li>
+          </ul>
+
+
+
+         </div>
+       </div>
+               <div class="collapse navbar-collapse justify-content-center bg-dark">
+                <h1>Limuru Bus Sacco management Reports</h1>
+            </div>
+          <div class="collapse navbar-collapse justify-content-end" id="navigation1">
+          <ul class="navbar-nav">
+            <a href="/logout" class="nav-link">
+              <i class="fas fa-sign-out-alt">Sign out</i>
+            </a>
+          </ul>
+
+      </div>
+      </div>
+    </nav>
+        </div>
+  </nav>
+</header>
+<br/>
+<div class="container">
+    <div class="row">
+
+        <div class="col-sm-6">
+              <div class="card"  style="max-width: 540px;">
+              <div class="row no-gutters">
+                <div class="col-md-4">
+                  <img src="{{url_for('static', filename='bus1.jpg')}}" class="card-img" alt="...">
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">Vehicles Owned</h5>
+
+                    <p class="card-text"><ul>
+                      {% for vehicle in operator.vehicles %}
+                      <li> {{vehicle.plateNo}}</li>
+                      {% endfor %}
+                  </ul></p>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+         <div class="col-sm-6">
+              <div class="card"  style="max-width: 540px;">
+              <div class="row no-gutters">
+                <div class="col-md-4">
+                  <img src="{{url_for('static', filename='employyees1.jpg')}}" class="card-img" alt="...">
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">Employees assigned to vehicles</h5>
+                    <p class="card-text">
+                      <ul>
+                      {% for vehicle in operator.vehicles %}
+                      {% for employee in vehicle.employees %}
+                      <li>{{employee.firstName}}</li>
+                      {% endfor %}
+                      {% endfor %}
+                      </ul>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-sm-12" style="display: flex; justify-content: center;">
+           <div class="card" style="width: 50%;">
+           <div class="row no-gutters">
+               <div class="col-md-4">
+                <img src="{{url_for('static', filename='money1.jpg')}}" class="card-img" alt="...">
+               </div>
+               <div class="col-lg-4-wd-75">
+               <div class="card-body">
+                <h5 class="card-title">Savings Progress</h5>
+                <p class="card-text">
+                    <ul>
+                   <li>{{ totalcontribs}}</li>
+               </ul>
+                </p>
+              </div>
+              </div>
+           </div>
+        </div>
+        </div>
+
+    </div>
+
+</div>
+
+  <script src="{{url_for('static', filename='jquery.min.js')}}"></script>
+  <script src="{{url_for('static', filename='bootstrap.bundle.min.js')}}"></script>
+</body>
+</html>

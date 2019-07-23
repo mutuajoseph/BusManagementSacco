@@ -1,0 +1,2 @@
+requests>=v2.18.4
+schema>=0.6.7
